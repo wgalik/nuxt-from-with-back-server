@@ -1,75 +1,84 @@
-# Nuxt Minimal Starter
+# Nuxt Form Handling Example
 
-Look at the [Nuxt documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
+This project demonstrates a simple form submission flow in **Nuxt 4** using the **Composition API**, **TypeScript**, and **server API routes**.
+The example shows how to:
 
-## Setup
+- Use `ref()` to store reactive form data
+- Submit data to a backend API using `fetch()`
+- Handle the response and display returned values on the frontend
+- Create a basic server endpoint using `defineEventHandler`
 
-Make sure to install dependencies:
+## 📌 Features
 
-```bash
-# npm
-npm install
+- Two-way data binding with `v-model`
+- POST request to a local API route (`/api/form`)
+- TypeScript support
+- Server-side body parsing using `readBody(event)`
+- Displaying frontend values and backend response for comparison
 
-# pnpm
-pnpm install
+## 🧩 Frontend Code Overview (`<script setup>`)
 
-# yarn
-yarn install
+The form collects a first name and last name using two controlled inputs. On submission, the `handleForm()` function sends a POST request to `/api/form` and updates the UI with the response:
 
-# bun
-bun install
+```
+const handleForm = async () => {
+  try {
+    const response = await fetch("/api/form", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        firstName: firstName.value,
+        lastName: lastName.value,
+      }),
+    });
+
+    const data = await response.json();
+
+    firstNameFromBack.value = data.firstName;
+    lastNameFromBack.value = data.lastName;
+    msg.value = data.msg;
+  } catch (error) {
+    console.error("Error sending form:", error);
+  }
+};
 ```
 
-## Development Server
+The template displays:
 
-Start the development server on `http://localhost:3000`:
+- Inputs for user data
+- Form submit button
+- Data entered on the frontend
+- Data returned from the backend
 
-```bash
-# npm
-npm run dev
+## 🖥️ Backend Code Overview (`/api/form`)
 
-# pnpm
-pnpm dev
+The API route reads the request body and returns the same values back, along with a confirmation message:
 
-# yarn
-yarn dev
+```
+export default defineEventHandler(async (event) => {
+  const body = await readBody(event);
 
-# bun
-bun run dev
+  return {
+    firstName: body.firstName,
+    lastName: body.lastName,
+    msg: "Data sent correctly",
+  };
+});
 ```
 
-## Production
+This endpoint can later be expanded to store data in a database or forward it to another service.
 
-Build the application for production:
+## 📂 Project Structure
 
-```bash
-# npm
-npm run build
-
-# pnpm
-pnpm build
-
-# yarn
-yarn build
-
-# bun
-bun run build
+```
+/pages
+  index.vue          # Frontend with form
+/server/api/form.ts  # Backend API route
 ```
 
-Locally preview production build:
+## 📝 Summary
 
-```bash
-# npm
-npm run preview
-
-# pnpm
-pnpm preview
-
-# yarn
-yarn preview
-
-# bun
-bun run preview
-```
-
-Check out the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.
+This example is a clean starting point for building forms in Nuxt 4.
+It shows how to connect the frontend and backend, handle API responses, and work with reactive state using Vue’s Composition API.
