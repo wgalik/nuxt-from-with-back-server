@@ -1,24 +1,32 @@
 # Nuxt Form Handling Example
 
-This project demonstrates a simple form submission flow in **Nuxt 4** using the **Composition API**, **TypeScript**, and **server API routes**.
-The example shows how to:
-
-- Use `ref()` to store reactive form data
-- Submit data to a backend API using `fetch()`
-- Handle the response and display returned values on the frontend
-- Create a basic server endpoint using `defineEventHandler`
+This project demonstrates a simple form submission workflow in **Nuxt 4** using the **Composition API**, _TypeScript_, and Nuxt’s built-in **server routes**.
+It allows users to submit basic form data, send it to a backend API, receive a response, and display both frontend values and backend-returned values.
 
 ## 📌 Features
 
-- Two-way data binding with `v-model`
-- POST request to a local API route (`/api/form`)
-- TypeScript support
-- Server-side body parsing using `readBody(event)`
-- Displaying frontend values and backend response for comparison
+- Reactive state management using `ref()`
+- Centralized API endpoint constant (`API`)
+- POST request to a local Nuxt server route (`/api/form`)
+- Reset functionality for clearing frontend inputs
+- TypeScript support throughout the component
+- Displays:
+  - Data entered on the frontend
+  - Data returned from the backend
+  - Confirmation message
 
-## 🧩 Frontend Code Overview (`<script setup>`)
+## 🧩 Frontend Code Overview
 
-The form collects a first name and last name using two controlled inputs. On submission, the `handleForm()` function sends a POST request to `/api/form` and updates the UI with the response:
+The component contains:
+
+**Reactive values**
+
+- `firstName`, `lastName` – user input
+- `firstNameFromBack`, `lastNameFromBack` – server response
+- `msg` – backend message
+- `API` constant for the endpoint URL
+
+**Form submission logic**
 
 ```
 const handleForm = async () => {
@@ -45,16 +53,29 @@ const handleForm = async () => {
 };
 ```
 
-The template displays:
+**Reset function**
 
-- Inputs for user data
-- Form submit button
-- Data entered on the frontend
-- Data returned from the backend
+A simple function to clear frontend input values:
 
-## 🖥️ Backend Code Overview (`/api/form`)
+```
+const reset = () => {
+  firstName.value = "";
+  lastName.value = "";
+};
+```
 
-The API route reads the request body and returns the same values back, along with a confirmation message:
+**Template
+**
+
+- Form with two inputs
+- Submit button
+- Message from backend
+- Two result sections (front + back)
+- Reset button for clearing frontend data
+
+## 🖥️ Backend API Overview (`/api/form`)
+
+The server endpoint receives data from the form, processes it, and returns a response:
 
 ```
 export default defineEventHandler(async (event) => {
@@ -68,7 +89,7 @@ export default defineEventHandler(async (event) => {
 });
 ```
 
-This endpoint can later be expanded to store data in a database or forward it to another service.
+You can expand this API in the future to add validation, database storage, or forwarding logic.
 
 ## 📂 Project Structure
 
@@ -80,5 +101,9 @@ This endpoint can later be expanded to store data in a database or forward it to
 
 ## 📝 Summary
 
-This example is a clean starting point for building forms in Nuxt 4.
-It shows how to connect the frontend and backend, handle API responses, and work with reactive state using Vue’s Composition API.
+This example is a clear demonstration of how to:
+
+- Use Nuxt 4 with TypeScript
+- Handle form data on both the frontend and backend
+- Build reactive UI elements using the Composition API
+- Implement simple reset and API communication logic
